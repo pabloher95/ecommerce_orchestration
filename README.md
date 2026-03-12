@@ -1,5 +1,9 @@
 ### Containerization with Docker
 
+Ensure that npm is installed in every repo and that it produces a `package-lock.json` file
+`cd /microservice/`
+`npm install` 
+
 Run services locally
 `docker-compose build`
 `docker-compose up -d`
@@ -20,3 +24,5 @@ Run Jenkins
 Configure Jenkins local credentials
 Add Node.js and Pipeline Utility Steps plugin in Jenkins configs
 Configure Docker Hub PAT for access via Jenkins
+Configure Github PAT to use in Github Sever configs in Jenkins and pipeline-level authentication to prevent anonymous query limits
+Run ngrok to expose Jenkins and bind the URL to the repo's webhook
