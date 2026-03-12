@@ -26,3 +26,7 @@ Add Node.js and Pipeline Utility Steps plugin in Jenkins configs
 Configure Docker Hub PAT for access via Jenkins
 Configure Github PAT to use in Github Sever configs in Jenkins and pipeline-level authentication to prevent anonymous query limits
 Run ngrok to expose Jenkins and bind the URL to the repo's webhook
+
+## Kubernetes Orchestration
+Kubernetes orchestration requires check that minikube is running from Terraform deploy: `minikube status -p ecommerce-dev`
+

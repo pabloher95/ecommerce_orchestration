@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-database
+  labels:
+    app: ecommerce-database
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0
+      maxUnavailable: 1
+  selector:
+    matchLabels:
+      app: ecommerce-database
+  template:
+    metadata:
+      labels:
+        app: ecommerce-database
+    spec:
+      containers:
+        - name: database
+          image: pabloher95/ecommerce-database:latest
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: ecommerce-db-config
+            - secretRef:
+                name: ecommerce-db-secret
+          volumeMounts:
+            - name: db-data
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: ecommerce-db-pvc

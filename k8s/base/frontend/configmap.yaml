@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ecommerce-frontend-config
+data:
+  REACT_APP_PRODUCT_SERVICE_URL: "http://localhost:30001"
+  REACT_APP_ORDER_SERVICE_URL: "http://localhost:30002"

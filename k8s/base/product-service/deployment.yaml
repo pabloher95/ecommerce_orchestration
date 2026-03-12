@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-product-service
+  labels:
+    app: ecommerce-product-service
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ecommerce-product-service
+  template:
+    metadata:
+      labels:
+        app: ecommerce-product-service
+    spec:
+      containers:
+        - name: product-service
+          image: pabloher95/ecommerce-product-service:latest
+          ports:
+            - containerPort: 3001
+          envFrom:
+            - configMapRef:
+                name: ecommerce-product-service-config
+            - secretRef:
+                name: ecommerce-product-service-secret
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"

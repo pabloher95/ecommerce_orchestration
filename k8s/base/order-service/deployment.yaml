@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-order-service
+  labels:
+    app: ecommerce-order-service
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: ecommerce-order-service
+  template:
+    metadata:
+      labels:
+        app: ecommerce-order-service
+    spec:
+      containers:
+        - name: order-service
+          image: pabloher95/ecommerce-order-service:latest
+          ports:
+            - containerPort: 3002
+          envFrom:
+            - configMapRef:
+                name: ecommerce-order-service-config
+            - secretRef:
+                name: ecommerce-order-service-secret
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "50m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
