@@ -1,0 +1,1 @@
+variable "http_port" { type = number }
