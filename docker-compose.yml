@@ -1,0 +1,63 @@
+services:
+  db:
+    build: ./database
+    image: pabloher95/ecommerce-database:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: ecommerce
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d ecommerce"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  product-service:
+    build: ./product-service
+    image: pabloher95/ecommerce-product-service:latest
+    environment:
+      PORT: 3001
+      DB_HOST: db
+      DB_NAME: ecommerce
+      DB_USER: postgres
+      DB_PASSWORD: password
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  order-service:
+    build: ./order-service
+    image: pabloher95/ecommerce-order-service:latest
+    environment:
+      PORT: 3002
+      DB_HOST: db
+      DB_NAME: ecommerce
+      DB_USER: postgres
+      DB_PASSWORD: password
+      PRODUCT_SERVICE_URL: http://product-service:3001
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+      - product-service
+
+  frontend:
+    build: ./ecommerce-frontend
+    image: pabloher95/ecommerce-frontend:latest
+    environment:
+      REACT_APP_PRODUCT_SERVICE_URL: http://localhost:3001
+      REACT_APP_ORDER_SERVICE_URL: http://localhost:3002
+    ports:
+      - "3000:80"
+    depends_on:
+      - product-service
+      - order-service
+      
+volumes:
+  db_data:
